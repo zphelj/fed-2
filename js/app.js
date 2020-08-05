@@ -17,7 +17,6 @@
  * Define Global Variables
  *
 */
-const iSectionIter = document.querySelectorAll('Section');
 const eNavbarList = document.getElementById('navbar__list');
 
 /**
@@ -29,6 +28,7 @@ const eNavbarList = document.getElementById('navbar__list');
 // Returns true if the element passed in is in the viewport at all
 function isInViewport(element) {
   let rect = element.getBoundingClientRect();
+  // if both top and left are >= 0 the element is at least partially in the viewport
   return ( rect.top >= 0 && rect.left >= 0 );
 }
 
@@ -37,12 +37,6 @@ function isInViewport(element) {
  * Begin Main Functions
  *
 */
-
-// build the nav using the global iterator for sections
-function buildNav(mySection) {
-  // create a list item for the NavBar
-  eNavbarList.insertAdjacentHTML('beforeend', `<li class='menu__link ${mySection.className}' data-nav=${mySection.id}><a href="#${mySection.id}">${mySection.dataset.nav}</li>`);
-}
 
 // refreshes the navbar based on current browser state
 function refreshActiveState() {
@@ -88,7 +82,11 @@ function UserScroll(scroll_event) {
 */
 
 // Build initial menu
-document.addEventListener('DOMContentLoaded', iSectionIter.forEach(buildNav));
+document.addEventListener('DOMContentLoaded',
+  document.querySelectorAll('Section').forEach( mySection => {
+    // create a list item for the NavBar
+    eNavbarList.insertAdjacentHTML('beforeend', `<li class='menu__link ${mySection.className}' data-nav=${mySection.id}><a href="#${mySection.id}">${mySection.dataset.nav}</li>`);
+  }));
 
 // Scroll to section on link click
 eNavbarList.addEventListener('click', ScrollToAnchor);
