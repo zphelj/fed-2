@@ -45,7 +45,7 @@ function buildNav(mySection) {
 }
 
 // refreshes the navbar based on current browser state
-function refreshNavBar() {
+function refreshActiveState() {
   // loop through the navbar items and find any in the viewport
   let items = eNavbarList.getElementsByTagName("li");
   // clean first
@@ -53,13 +53,18 @@ function refreshNavBar() {
     items[i].classList.remove('your-active-class'); // strip if it's there - will not throw error if missing
   }
   // update
+  let x = document.getElementsByTagName('main')[0].querySelectorAll('.your-active-class')[0];
+  if (x != null) x.classList.remove('your-active-class');
   for (let i = 0; i < items.length; ++i) {
     if (isInViewport(document.getElementById(items[i].dataset.nav))) {
-      items[i].classList.add('your-active-class'); // we have a match, update it
-      i = items.length; // only update the first hit
+      // we've located an item in the viewport, remove the old active designation from the page
+      items[i].classList.add('your-active-class'); // add to nav
+      document.getElementById(items[i].dataset.nav).classList.add('your-active-class'); // add to page
+      i = items.length; // only update the first match
     }
   }
 }
+
 
 // Scroll to anchor
 function ScrollToAnchor(click_event) {
@@ -67,13 +72,13 @@ function ScrollToAnchor(click_event) {
   click_event.preventDefault(); // don't jump to the anchor!
   dataNav = click_event.target.parentElement.dataset.nav; // what section was targeted
   document.getElementById(dataNav).scrollIntoView({behavior: "smooth"}); // now scroll to it
-  refreshNavBar(); // finally, refresh the navbar
+  refreshActiveState(); // finally, refresh the navbar
 }
 
 /* If the page is scrolled manually we may need to update the menu and/or the page content
    NOTE: If the user clicks a navigation item this wil also trigger scroll events */
 function UserScroll(scroll_event) {
-  refreshNavBar(); // all we need to do is refresh the navbar
+  refreshActiveState(); // all we need to do is refresh the navbar
 }
 
 /**
